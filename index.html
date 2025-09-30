@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Route 1 Auto Parts</title>
+<style>
+  :root{--bg:#0b0c10;--card:#151821;--ink:#e7e9ee;--muted:#9aa3b2;--accent:#4f8cff;--ok:#2ecc71;--danger:#ff5a5f}
+  *{box-sizing:border-box} body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--ink)}
+  header{position:sticky;top:0;background:linear-gradient(180deg,rgba(11,12,16,.95),rgba(11,12,16,.8));backdrop-filter:saturate(140%) blur(8px);padding:12px 14px;border-bottom:1px solid #232634}
+  header h1{margin:0;font-size:18px} header nav{display:flex;gap:8px;margin-top:8px}
+  nav button{background:#1c2130;color:var(--ink);border:1px solid #262b3a;border-radius:10px;padding:8px 12px}
+  nav button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  main{max-width:1000px;margin:14px auto;padding:0 14px 60px}
+  .card{background:var(--card);border:1px solid #232634;border-radius:14px;padding:14px}
+  .grid{display:grid;gap:12px}
+  .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))} .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:800px){.grid.two,.grid.three{grid-template-columns:1fr}}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+  input,select{width:100%;background:#0f1320;color:var(--ink);border:1px solid #262b3a;border-radius:10px;padding:10px}
+  input[type="number"]{appearance:textfield} input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{appearance:none;margin:0}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .pill{font-size:12px;color:#fff;border-radius:999px;padding:3px 8px;background:#2c3244;border:1px solid #3a4258}
+  .btn{cursor:pointer;border-radius:10px;border:1px solid #2a3143;background:#1c2130;color:var(--ink);padding:10px 12px}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.ok{background:var(--ok);border-color:var(--ok);color:#000}
+  .btn.danger{background:transparent;border-color:var(--danger);color:var(--danger)}
+  .list{display:grid;gap:10px}
+  .part{display:grid;gap:8px;border:1px solid #2a3143;background:#121624;border-radius:12px;padding:12px}
+  .muted{color:var(--muted)} .right{margin-left:auto}
+  .empty{opacity:.8;text-align:center;padding:40px}
+  .footer{position:fixed;bottom:0;left:0;right:0;background:#0b0c10bd;backdrop-filter:blur(8px);border-top:1px solid #232634;padding:10px 14px;text-align:center}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+  .banner{display:flex;gap:8px;align-items:center;background:#101423;border:1px dashed #2a3143;border-radius:10px;padding:8px 10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Route 1 Auto Parts</h1>
+  <nav>
+    <button id="tabHome" class="active">Home</button>
+    <button id="tabInventory">Inventory</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ===================== HOME (Y/M/M only) ===================== -->
+  <section id="home" class="grid" style="gap:16px">
+    <div class="card">
+      <div class="grid three">
+        <div><label>Year</label><select id="year"></select></div>
+        <div><label>Make</label><select id="make"></select></div>
+        <div><label>Model</label><select id="model"></select></div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button id="searchBtn" class="btn primary">Search Parts</button>
+        <span class="pill">Select year / make / model, then Search</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================ INVENTORY (Add + All Parts) ================= -->
+  <section id="inventory" hidden class="grid" style="gap:16px">
+    <!-- Vehicle filter banner (appears if you searched from Home) -->
+    <div id="vehBanner" class="banner" hidden>
+      <span id="vehLabel" class="muted">Filtering by vehicle…</span>
+      <button id="clearVeh" class="btn">Clear Vehicle Filter</button>
+    </div>
+
+    <!-- Add Part form (top) -->
+    <div class="card">
+      <h3 style="margin:0 0 8px">Add Part</h3>
+      <div class="grid two">
+        <div><label>Title</label><input id="f_title" placeholder="e.g., Camry Radiator Support (Steel)" /></div>
+        <div><label>SKU (Part #)</label><input id="f_sku" class="mono" placeholder="e.g., TY-CAM-RADSPT-18" /></div>
+        <div><label>Price</label><input id="f_price" type="number" step="0.01" inputmode="decimal" placeholder="249.99" /></div>
+        <div><label>Condition</label>
+          <select id="f_condition">
+            <option>New (Other)</option><option>Refurbished</option>
+            <option>Used - Like New</option><option selected>Used - Good</option><option>Used - Fair</option>
+          </select>
+        </div>
+        <div><label>Category</label>
+          <select id="f_category">
+            <option>Body</option><option>Lighting</option><option>Interior</option>
+            <option>Engine</option><option>Suspension</option><option>Accessories</option>
+          </select>
+        </div>
+        <div><label>Make</label><input id="f_make" placeholder="Toyota" /></div>
+        <div><label>Model</label><input id="f_model" placeholder="Camry" /></div>
+        <div class="grid two">
+          <div><label>Year From</label><input id="f_yfrom" type="number" inputmode="numeric" placeholder="2018" /></div>
+          <div><label>Year To</label><input id="f_yto" type="number" inputmode="numeric" placeholder="2023" /></div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button id="saveBtn" class="btn primary">Save</button>
+        <button id="clearBtn" class="btn">Clear</button>
+        <span class="muted right" id="validationMsg"></span>
+      </div>
+    </div>
+
+    <!-- Search/sort + import/export for the list -->
+    <div class="card">
+      <div class="row" style="gap:8px">
+        <input id="q" placeholder="Search by SKU, title, or category" />
+        <select id="sort">
+          <option value="sku">Sort: SKU</option>
+          <option value="title">Sort: Title</option>
+        </select>
+        <button id="exportBtn" class="btn">Export JSON</button>
+        <input id="importFile" type="file" accept=".json" hidden />
+        <button id="importBtn" class="btn">Import JSON</button>
+      </div>
+    </div>
+
+    <!-- Parts list -->
+    <div class="card">
+      <div id="invList" class="list"></div>
+      <div id="invEmpty" class="empty" hidden>
+        <div style="font-size:40px">📦</div>
+        <p>No inventory yet. Add your first part above.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="footer">
+  <span class="muted">Saves locally in your browser • v11</span>
+</div>
+
+<script>
+/* -------------------- Data & Persistence -------------------- */
+const LS_KEY = "route1_parts_v1";
+const DEFAULT_PARTS = [
+  part("VW GTI Front Bumper Cover (Pure White)", 249.99, "Used - Good", "Body", "VW-GTI-BMP-2018-PW", [{make:"Volkswagen",model:"Golf/GTI",from:2015,to:2021}]),
+  part("Tesla Model 3 Headlight LH (Matrix)", 399.00, "Used - Like New", "Lighting", "TS-M3-LH-MTX", [{make:"Tesla",model:"Model 3",from:2021,to:2024}]),
+  part("BMW F30 M-Sport Steering Wheel (Heated)", 275.50, "Refurbished", "Interior", "BMW-F30-SW-HTD", [{make:"BMW",model:"3 Series",from:2012,to:2018}]),
+  part("Toyota Camry Radiator Support (Steel)", 180.00, "Used - Good", "Body", "TY-CAM-RADSPT-18", [{make:"Toyota",model:"Camry",from:2018,to:2023}]),
+  part("Ford F-150 Tail Lamp RH (LED)", 210.00, "Used - Good", "Lighting", "FD-F150-TL-RH-LED", [{make:"Ford",model:"F-150",from:2015,to:2020}]),
+];
+function part(title, price, condition, category, sku, fitments) {
+  return { id: crypto.randomUUID(), title, price, condition, category, sku, fitments };
+}
+function loadParts() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) { localStorage.setItem(LS_KEY, JSON.stringify(DEFAULT_PARTS)); return DEFAULT_PARTS.slice(); }
+    return JSON.parse(raw);
+  } catch { return DEFAULT_PARTS.slice(); }
+}
+function saveParts(parts) { localStorage.setItem(LS_KEY, JSON.stringify(parts)); }
+
+/* ---------------------- Options (Y/M/M) --------------------- */
+const YEARS = Array.from({length: 2035 - 1990 + 1}, (_,i) => 2035 - i);
+const MAKES = ["Acura","Audi","BMW","Chevrolet","Dodge","Ford","Honda","Hyundai","Jeep","Kia","Mazda","Mercedes-Benz","Nissan","Subaru","Tesla","Toyota","Volkswagen"];
+const MODELS_BY_MAKE = {
+  "Acura":["ILX","TLX","MDX","RDX"], "Audi":["A3","A4","A6","Q5","Q7"], "BMW":["3 Series","5 Series","X3","X5"],
+  "Chevrolet":["Silverado","Malibu","Equinox","Camaro"], "Dodge":["Charger","Challenger","Durango"],
+  "Ford":["F-150","Fusion","Escape","Mustang","Explorer"], "Honda":["Civic","Accord","CR-V","Pilot"],
+  "Hyundai":["Elantra","Sonata","Tucson","Santa Fe"], "Jeep":["Wrangler","Grand Cherokee","Cherokee","Compass"],
+  "Kia":["Forte","Optima","Sportage","Sorento"], "Mazda":["Mazda3","Mazda6","CX-5","CX-9"],
+  "Mercedes-Benz":["C-Class","E-Class","GLC","GLE"], "Nissan":["Altima","Sentra","Rogue","Pathfinder"],
+  "Subaru":["Impreza","Legacy","Forester","Outback"], "Tesla":["Model 3","Model Y","Model S","Model X"],
+  "Toyota":["Corolla","Camry","RAV4","Tacoma"], "Volkswagen":["Jetta","Golf/GTI","Passat","Tiguan"]
+};
+
+/* ----------------------- State & Helpers -------------------- */
+let PARTS = loadParts();
+let VEH_FILTER = null; // {year, make, model} when set from Home search
+
+const $ = (sel) => document.querySelector(sel);
+function money(n){ return n.toLocaleString(undefined,{style:"currency",currency:"USD"}); }
+
+/* -------------------------- Router ------------------------- */
+const S = {
+  home: $("#home"), inventory: $("#inventory"),
+  tabHome: $("#tabHome"), tabInventory: $("#tabInventory"),
+  vehBanner: $("#vehBanner"), vehLabel: $("#vehLabel"), clearVeh: $("#clearVeh")
+};
+function show(section){
+  S.home.hidden = section !== "home";
+  S.inventory.hidden = section !== "inventory";
+  S.tabHome.classList.toggle("active", section === "home");
+  S.tabInventory.classList.toggle("active", section === "inventory");
+  if (section === "inventory") {
+    updateVehBanner();
+    renderInventory();
+    // optional: scroll to the list
+    setTimeout(()=>document.getElementById("invList")?.scrollIntoView({behavior:"smooth", block:"start"}), 0);
+  }
+}
+S.tabHome.onclick = () => show("home");
+S.tabInventory.onclick = () => show("inventory");
+
+/* ------------------------ HOME logic ----------------------- */
+const yearSel=$("#year"), makeSel=$("#make"), modelSel=$("#model");
+YEARS.forEach(y => yearSel.append(new Option(String(y), String(y))));
+MAKES.forEach(m => makeSel.append(new Option(m,m)));
+makeSel.onchange = () => fillModels(makeSel.value);
+function fillModels(make) {
+  modelSel.innerHTML = "";
+  (MODELS_BY_MAKE[make] || []).forEach(md => modelSel.append(new Option(md, md)));
+}
+yearSel.value = "2023"; makeSel.value = "Toyota"; fillModels("Toyota"); modelSel.value = "Camry";
+
+$("#searchBtn").onclick = () => {
+  VEH_FILTER = { year: Number(yearSel.value), make: makeSel.value, model: modelSel.value };
+  show("inventory"); // jump to inventory with the filter applied
+};
+
+function fitsVehicle(p, y, make, model) {
+  return p.fitments?.some(f => f.make.toLowerCase()===make.toLowerCase()
+    && f.model.toLowerCase()===model.toLowerCase()
+    && Number(y) >= Number(f.from) && Number(y) <= Number(f.to));
+}
+function updateVehBanner(){
+  if (VEH_FILTER) {
+    S.vehBanner.hidden = false;
+    S.vehLabel.textContent = `Filtering by ${VEH_FILTER.year} ${VEH_FILTER.make} ${VEH_FILTER.model}`;
+  } else {
+    S.vehBanner.hidden = true;
+  }
+}
+S.clearVeh.onclick = () => { VEH_FILTER = null; updateVehBanner(); renderInventory(); };
+
+/* ---------------------- INVENTORY logic -------------------- */
+const q=$("#q"), sortSel=$("#sort"), invList=$("#invList"), invEmpty=$("#invEmpty");
+$("#importBtn")?.addEventListener("click", () => $("#importFile").click());
+$("#importFile")?.addEventListener("change", onImportFile);
+$("#exportBtn")?.addEventListener("click", exportJSON);
+
+const f_title=$("#f_title"), f_sku=$("#f_sku"), f_price=$("#f_price");
+const f_condition=$("#f_condition"), f_category=$("#f_category");
+const f_make=$("#f_make"), f_model=$("#f_model");
+const f_yfrom=$("#f_yfrom"), f_yto=$("#f_yto");
+const validationMsg=$("#validationMsg");
+const saveBtn=$("#saveBtn"), clearBtn=$("#clearBtn");
+
+q?.addEventListener("input", renderInventory);
+sortSel?.addEventListener("change", renderInventory);
+saveBtn?.addEventListener("click", onSaveAdd);
+clearBtn?.addEventListener("click", clearAddForm);
+
+function clearAddForm(){
+  [f_title,f_sku,f_price,f_make,f_model,f_yfrom,f_yto].forEach(i => i.value="");
+  if (f_condition) f_condition.value="Used - Good";
+  if (f_category)  f_category.value="Body";
+  if (validationMsg) validationMsg.textContent="";
+}
+
+function onSaveAdd(){
+  const title = f_title.value.trim();
+  const sku = f_sku.value.trim();
+  const price = parseFloat(f_price.value);
+  const make = f_make.value.trim();
+  const model = f_model.value.trim();
+  const yf = parseInt(f_yfrom.value,10);
+  const yt = parseInt(f_yto.value,10);
+
+  if(!title || !sku || isNaN(price) || !make || !model || isNaN(yf) || isNaN(yt)){
+    if (validationMsg) validationMsg.textContent = "Please fill all required fields (Title, SKU, Price, Make, Model, Years).";
+    return;
+  }
+  const p = part(title, price, f_condition.value, f_category.value, sku, [{make, model, from: yf, to: yt}]);
+  PARTS.unshift(p);
+  saveParts(PARTS);
+  clearAddForm();
+  renderInventory();
+}
+
+/* Render the list (applies VEH_FILTER first, then text search, then sort) */
+function renderInventory() {
+  let items = PARTS.slice();
+
+  if (VEH_FILTER) {
+    items = items.filter(p => fitsVehicle(p, VEH_FILTER.year, VEH_FILTER.make, VEH_FILTER.model));
+  }
+
+  const needle = (q?.value || "").trim().toLowerCase();
+  if (needle) {
+    items = items.filter(p =>
+      p.sku.toLowerCase().includes(needle) ||
+      p.title.toLowerCase().includes(needle) ||
+      p.category.toLowerCase().includes(needle)
+    );
+  }
+
+  const sortBySku = (sortSel?.value || "sku") === "sku";
+  items.sort((a,b) => sortBySku
+    ? a.sku.localeCompare(b.sku, undefined, {numeric:true,sensitivity:"base"})
+    : a.title.localeCompare(b.title, undefined, {sensitivity:"base"}));
+
+  if (invList) invList.innerHTML = "";
+  items.forEach(p => {
+    const row = document.createElement("div");
+    row.className="part";
+    row.innerHTML = `
+      <div class="row">
+        <strong>${p.title}</strong>
+        <button class="btn danger right" data-id="${p.id}">Delete</button>
+      </div>
+      <div class="row">
+        <span class="pill mono">SKU: ${p.sku}</span>
+        <span class="pill">${p.category}</span>
+        <span class="pill">${p.condition}</span>
+        <span class="right">${money(p.price)}</span>
+      </div>
+      <div class="muted" style="font-size:12px">
+        Fits: ${p.fitments.map(f => `${f.make} ${f.model} (${f.from}–${f.to})`).join("; ")}
+      </div>`;
+    invList?.append(row);
+    row.querySelector("button[data-id]")?.addEventListener("click", (e) => {
+      const id = e.currentTarget.getAttribute("data-id");
+      PARTS = PARTS.filter(x => x.id !== id);
+      saveParts(PARTS);
+      renderInventory();
+    });
+  });
+  if (invEmpty) invEmpty.hidden = items.length !== 0;
+}
+
+/* --------- Export / Import (backup & restore JSON) --------- */
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(PARTS, null, 2)], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "inventory.json"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 500);
+}
+function onImportFile(e){
+  const file = e.target.files?.[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const arr = JSON.parse(reader.result);
+      if(!Array.isArray(arr)) throw new Error("Invalid JSON");
+      const valid = arr.every(x => x && x.title && x.sku && typeof x.price === "number");
+      if(!valid) throw new Error("Missing fields");
+      PARTS = arr.map(x => ({
+        id: x.id || crypto.randomUUID(),
+        title: x.title, price: x.price, condition: x.condition, category: x.category, sku: x.sku,
+        fitments: (x.fitments||[]).map(f => ({make:f.make, model:f.model, from:Number(f.from), to:Number(f.to)}))
+      }));
+      saveParts(PARTS);
+      renderInventory();
+    }catch(err){
+      alert("Import failed: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ------------------------- First render -------------------- */
+renderInventory();
+</script>
+</body>
+</html>
+
