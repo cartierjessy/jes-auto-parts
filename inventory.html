@@ -4,11 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Route 1 Auto Parts — Inventory</title>
+  <title>JES' Auto Parts — Inventory</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
   <h1>Route 1 Auto Parts</h1>
+  <div class="brand">JES' Auto Parts</div>
   <nav>
     <a href="index.html">Home</a>
     <a href="inventory.html" class="active">Inventory</a>
@@ -20,6 +22,7 @@
   <div id="vehBanner" class="banner" hidden>
     <span id="vehLabel" class="muted">Filtering by vehicle…</span>
     <button id="clearVeh" class="btn">Clear Vehicle Filter</button>
+    <button id="clearVeh" class="btn ghost">Clear Vehicle Filter</button>
   </div>
 
   <!-- Add Part form -->
@@ -51,6 +54,7 @@
     <div class="row" style="margin-top:12px">
       <button id="saveBtn" class="btn primary">Save</button>
       <button id="clearBtn" class="btn">Clear</button>
+      <button id="clearBtn" class="btn ghost">Clear</button>
       <span class="muted right" id="validationMsg"></span>
     </div>
   </section>
@@ -64,8 +68,10 @@
         <option value="title">Sort: Title</option>
       </select>
       <button id="exportBtn" class="btn">Export JSON</button>
+      <button id="exportBtn" class="btn ghost">Export JSON</button>
       <input id="importFile" type="file" accept=".json" hidden />
       <button id="importBtn" class="btn">Import JSON</button>
+      <button id="importBtn" class="btn ghost">Import JSON</button>
     </div>
   </section>
 
@@ -80,6 +86,7 @@
 </main>
 
 <div class="footer"><span class="muted">v1</span></div>
+<footer class="footer"><span class="muted">v1</span></footer>
 <script src="inventory.js"></script>
 </body>
 </html>
