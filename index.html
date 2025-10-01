@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JES' AUTO PARTS — Home</title>
+  <title>JES' Auto Parts — Home</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <header>
-  <h1>JES' AUTO PARTS</h1>
+  <div class="brand">JES' Auto Parts</div>
   <nav>
     <a href="index.html" class="active">Home</a>
     <a href="inventory.html">Inventory</a>
@@ -16,22 +16,66 @@
 </header>
 
 <main>
-  <section class="card">
-    <div class="grid three">
-      <div><label>Year</label><select id="year"></select></div>
-      <div><label>Make</label><select id="make"></select></div>
-      <div><label>Model</label><select id="model"></select></div>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="hero-badge">Premium Recycled Components</p>
+      <h1>Precision parts that feel brand new.</h1>
+      <p class="hero-subtitle">Discover a curated collection of OEM-quality components, remastered with the same obsessive attention to detail you expect from the world's most admired products.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="inventory.html">Browse inventory</a>
+        <a class="btn ghost" href="#capabilities">See what makes us different</a>
+      </div>
     </div>
-    <div class="row" style="margin-top:12px">
-      <button id="searchBtn" class="btn primary">Search Parts</button>
-      <span class="pill">Select year / make / model</span>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hero-sphere"></div>
+      <div class="hero-card">
+        <div class="hero-card-top">Integrity Check</div>
+        <div class="hero-card-mid">
+          <span>Approval</span>
+          <strong>99.4%</strong>
+        </div>
+        <div class="hero-card-bottom">Multi-point diagnostics ensure every part meets our exacting standard.</div>
+      </div>
     </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <strong>24 hr</strong>
+      <span>Average turnaround from request to pickup.</span>
+    </div>
+    <div class="stat">
+      <strong>1600+</strong>
+      <span>Late-model assemblies refreshed and ready.</span>
+    </div>
+    <div class="stat">
+      <strong>97%</strong>
+      <span>Customer satisfaction across service partners.</span>
+    </div>
+  </section>
+
+  <section id="capabilities" class="feature-grid">
+    <article class="feature-card">
+      <h2>Designed for the modern shop</h2>
+      <p>A minimalist interface inspired by Cupertino craftsmanship makes every interaction effortless, whether you're sourcing a single mirror or outfitting a full rebuild.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Live-fit insights</h3>
+      <p>Instant compatibility data and VIN matching keep your techs focused on the repair, not the paperwork.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Quality you can feel</h3>
+      <p>Each component is restored with premium coatings, corrosion protection, and packaging that rivals factory-fresh deliveries.</p>
+    </article>
+    <article class="feature-card">
+      <h3>White-glove logistics</h3>
+      <p>Same-day local delivery and nationwide shipping options calibrated for your workflow.</p>
+    </article>
   </section>
 </main>
 
-<div class="footer"><span class="muted">v1</span></div>
-<script src="home.js"></script>
+<footer class="footer">
+  <span class="muted">Crafted with care • JES' Auto Parts</span>
+</footer>
 </body>
 </html>
-<body style="outline: 6px solid magenta;">
-
